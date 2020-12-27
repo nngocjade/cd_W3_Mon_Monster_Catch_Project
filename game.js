@@ -19,6 +19,7 @@ let bgReady, heroReady, monsterReady;
 let bgImage, heroImage, monsterImage;
 
 let monstersCaught = 0;
+
 let startTime = Date.now();
 const SECONDS_PER_ROUND = 30;
 let elapsedTime = 0;
@@ -37,8 +38,8 @@ function loadImages() {
   };
   heroImage.src = "images/hero.png";
 
-  monsters.forEach((monster, i) => {
-    monsterImage = new Image();
+  monsters.forEach((monsterImage, i) => {
+    monsterImage.image = new Image();
     monsterImage.onload = function () {
       // show the monster image
       monsterReady = true;
@@ -156,10 +157,11 @@ function render() {
   if (heroReady) {
     ctx.drawImage(heroImage, hero.x, hero.y);
   }
-  monsters.forEach((monster) => {
+  monsters.forEach((monsterImage) => {
     if (monsterReady) {
       ctx.drawImage(monsterImage, monster.x, monster.y);
     }
+    console.log(monsterImage);
   });
   ctx.fillText(`You have caught ${monstersCaught} monsters`, 20, 80);
   ctx.fillText(
