@@ -36,27 +36,23 @@ function loadImages() {
     heroReady = true;
   };
   heroImage.src = "images/hero.png";
+
+  monsters.forEach((monster, i) => {
+    monsterImage = new Image();
+    monsterImage.onload = function () {
+      // show the monster image
+      monsterReady = true;
+    };
+    monsterImage.src = `images/monster${i + 1}.png`;
+  });
+
   // MONSTER IMAGE 1
-  monsterImage1 = new Image();
-  monsterImage1.onload = function () {
-    // show the monster image
-    monsterReady = true;
-  };
-  monsterImage1.src = "images/monster.png";
-  // // MONSTER IMAGE 2
-  // monsterImage2 = new Image();
-  // monsterImage2.onload = function () {
+  // monsterImage1 = new Image();
+  // monsterImage1.onload = function () {
   //   // show the monster image
   //   monsterReady = true;
   // };
-  // monsterImage2.src = "images/monster.png";
-  // // MONSTER IMAGE 3
-  // monsterImage3 = new Image();
-  // monsterImage3.onload = function () {
-  //   // show the monster image
-  //   monsterReady = true;
-  // };
-  // monsterImage3.src = "images/monster.png";
+  // monsterImage1.src = "images/monster.png";
 }
 
 /**
@@ -160,9 +156,12 @@ function render() {
   if (heroReady) {
     ctx.drawImage(heroImage, hero.x, hero.y);
   }
-  if (monsterReady) {
-    ctx.drawImage(monsterImage1, monsters.x, monsters.y);
-  }
+  monsters.forEach((monster) => {
+    if (monsterReady) {
+      ctx.drawImage(monsterImage, monster.x, monster.y);
+    }
+  });
+  ctx.fillText(`You have caught ${monstersCaught} monsters`, 20, 80);
   ctx.fillText(
     `Seconds Remaining: ${SECONDS_PER_ROUND - elapsedTime}`,
     20,
