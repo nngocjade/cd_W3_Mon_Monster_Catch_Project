@@ -115,22 +115,46 @@ let update = function () {
   if (keysPressed["ArrowRight"]) {
     hero.x += 5;
   }
+  if (hero.x > canvas.width) {
+    hero.x = 0;
+  }
+  if (hero.x < 0) {
+    hero.x = canvas.width;
+  }
+  if (hero.y > canvas.height) {
+    hero.y = 0;
+  }
+  if (hero.y < 0) {
+    hero.y = canvas.height;
+  }
+  monsters.forEach((monster) => {
+    monster.x += 5 * Math.random() - 2.5;
+    monster.y += 5 * Math.random() - 2.5;
+
+    if (monster.x > canvas.width) {
+      monster.x = 0;
+    }
+  });
 
   // Check if player and monster collided. Our images
   // are 32 pixels big.
-  monsters.forEach((monsters) => {
+  monsters.forEach((monster) => {
     if (
-      hero.x <= monsters.x + 32 &&
-      monsters.x <= hero.x + 32 &&
-      hero.y <= monsters.y + 32 &&
-      monsters.y <= hero.y + 32
+      hero.x <= monster.x + 32 &&
+      monster.x <= hero.x + 32 &&
+      hero.y <= monster.y + 32 &&
+      monster.y <= hero.y + 32
     ) {
     }
     // Pick a new location for the monster.
     // Note: Change this to place the monster at a new, random location.
-    monsters.x = Math.random() * canvas.width;
-    monsters.y = Math.random() * canvas.height;
-    ++monstersCaught;
+    monster.x = Math.random() * canvas.width;
+    monster.y = Math.random() * canvas.height;
+    monstersCaught++;
+    // let highScore = window.localStorage.getItem("highScore");
+    // if (highScore == null || highScore < monstersCaught) {
+    //   window.localStorage.setItem("highScore", monstersCaught);
+    // }
   });
 };
 
@@ -156,6 +180,9 @@ function render() {
     20,
     100
   );
+  // ctx.fillText(
+  //   `High Score: ${window.localStorage.getItem("highScore")}, 20, 30`
+  // );
 }
 
 /**
