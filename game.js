@@ -13,48 +13,11 @@ const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = 512;
 canvas.height = 480;
-document.body.appendChild(canvas);
+document.getElementById("canvas").appendChild(canvas);
 
-let bgReady, heroReady, monsterReady;
-let bgImage, heroImage, monsterImage;
+let bg = {};
 
 let monstersCaught = 0;
-
-let startTime = Date.now();
-const SECONDS_PER_ROUND = 30;
-let elapsedTime = 0;
-
-function loadImages() {
-  bgImage = new Image();
-  bgImage.onload = function () {
-    // show the background image
-    bgReady = true;
-  };
-  bgImage.src = "images/background.png";
-  heroImage = new Image();
-  heroImage.onload = function () {
-    // show the hero image
-    heroReady = true;
-  };
-  heroImage.src = "images/hero.png";
-
-  monsters.forEach((monsterImage, i) => {
-    monsterImage.image = new Image();
-    monsterImage.onload = function () {
-      // show the monster image
-      monsterReady = true;
-    };
-    monsterImage.src = `images/monster${i + 1}.png`;
-  });
-
-  // MONSTER IMAGE 1
-  // monsterImage1 = new Image();
-  // monsterImage1.onload = function () {
-  //   // show the monster image
-  //   monsterReady = true;
-  // };
-  // monsterImage1.src = "images/monster.png";
-}
 
 /**
  * Setting up our characters.
@@ -66,18 +29,42 @@ function loadImages() {
  * The same applies to the monster.
  */
 
-// let heroX = canvas.width / 2;
-// let heroY = canvas.height / 2;
-
-// let monsterX = 100;
-// let monsterY = 100;
-
 let hero = { x: canvas.width / 2, y: canvas.height / 2 };
 let monsters = [
   { x: Math.random() * canvas.width, y: Math.random * canvas.height },
   { x: Math.random() * canvas.width, y: Math.random * canvas.height },
   { x: Math.random() * canvas.width, y: Math.random * canvas.height },
 ];
+
+let startTime = Date.now();
+const SECONDS_PER_ROUND = 30;
+let elapsedTime = 0;
+
+function loadImages() {
+  bg.image = new Image();
+
+  bg.image.onload = function () {
+    // show the background image
+    bg.ready = true;
+  };
+  bg.image.src = "images/background.png";
+  hero.image = new Image();
+  hero.image.onload = function () {
+    // show the hero image
+    hero.ready = true;
+  };
+  hero.image.src = "images/hero.png";
+
+  monsters.forEach((monster, i) => {
+    monster.image = new Image();
+    monster.image.onload = function () {
+      // show the monster image
+      monster.ready = true;
+    };
+    monster.image.src = `images/monster${i + 1}.png`;
+    console.log(monster);
+  });
+}
 
 /**
  * Keyboard Listeners
@@ -143,7 +130,7 @@ let update = function () {
     // Note: Change this to place the monster at a new, random location.
     monsters.x = Math.random() * canvas.width;
     monsters.y = Math.random() * canvas.height;
-    monstersCaught++;
+    ++monstersCaught;
   });
 };
 
@@ -151,17 +138,17 @@ let update = function () {
  * This function, render, runs as often as possible.
  */
 function render() {
-  if (bgReady) {
-    ctx.drawImage(bgImage, 0, 0);
+  if (bg.ready) {
+    ctx.drawImage(bg.image, 0, 0);
   }
-  if (heroReady) {
-    ctx.drawImage(heroImage, hero.x, hero.y);
+  if (hero.ready) {
+    ctx.drawImage(hero.image, hero.x, hero.y);
   }
-  monsters.forEach((monsterImage) => {
-    if (monsterReady) {
-      ctx.drawImage(monsterImage, monster.x, monster.y);
+  monsters.forEach((monster) => {
+    if (monster.ready) {
+      ctx.drawImage(monster.image, monster.x, monster.y);
     }
-    console.log(monsterImage);
+    console.log(monster);
   });
   ctx.fillText(`You have caught ${monstersCaught} monsters`, 20, 80);
   ctx.fillText(
